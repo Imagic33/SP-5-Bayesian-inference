@@ -1,0 +1,21 @@
+model {
+  
+  x[1] ~ dnorm(0, 0.01)
+  log(n[1]) <- x[1]
+  
+  x[2] ~ dnorm(0, tau)
+  log(n[2]) <- x[2]
+  
+  for(i in 3:N){
+    x[i] ~ dnorm(2*x[i-1]-x[i-2], tau)
+    log(n[i]) <- x[i]
+  }
+
+  m <- B %*% n
+  
+  for(i in 1:N){
+    y[i] ~ dpois(m[i])
+  }
+  
+  tau ~ dgamma(4,0.04)
+}
